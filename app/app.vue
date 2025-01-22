@@ -28,7 +28,7 @@
           <div class="flex items-center gap-4 mb-2 justify-end">
             <UButton
               size="xs"
-              :color="useMetric ? 'slate' : 'blue'"
+              :color="useMetric ? 'gray' : 'blue'"
               :variant="useMetric ? 'ghost' : 'solid'"
               @click="useMetric = false"
             >
@@ -36,7 +36,7 @@
             </UButton>
             <UButton
               size="xs"
-              :color="useMetric ? 'blue' : 'slate'"
+              :color="useMetric ? 'blue' : 'gray'"
               :variant="useMetric ? 'solid' : 'ghost'"
               @click="useMetric = true"
             >
@@ -44,7 +44,7 @@
             </UButton>
           </div>
           <div class="flex items-center gap-2">
-            <UIcon name="i-heroicons-clock" class="w-5 h-5" />
+            <i class="fas fa-clock w-5 h-5"></i>
             <span>Updated {{ data ? new Date(data.timestamp).toLocaleTimeString() : '-' }}</span>
           </div>
         </div>
@@ -63,7 +63,7 @@
 
       <!-- Loading State -->
       <div v-if="pending" class="flex justify-center">
-        <ULoadingIcon size="lg" class="text-blue-400" />
+        <UIcon name="i-heroicons-arrow-path" class="animate-spin text-blue-400" size="lg" />
       </div>
 
       <!-- Error State -->
@@ -71,10 +71,14 @@
         v-if="error"
         color="red"
         variant="soft"
-        icon="i-heroicons-exclamation-triangle"
+        :icon="false"
         title="Error"
         :description="error.message"
-      />
+      >
+        <template #icon>
+          <i class="fas fa-triangle-exclamation"></i>
+        </template>
+      </UAlert>
 
       <!-- Weather Data -->
       <template v-if="data">
@@ -111,11 +115,11 @@
                   <h3 class="text-xl font-bold mb-2">{{ city.city }}, {{ city.state }}</h3>
                   <div class="flex flex-wrap gap-4 text-blue-200">
                     <div class="flex items-center gap-2">
-                      <UIcon name="i-heroicons-cloud-rain" />
+                      <i class="fas fa-cloud-rain"></i>
                       <span>{{ city.nextSevenDays.rainyDays }} rainy days</span>
                     </div>
                     <div class="flex items-center gap-2">
-                      <UIcon name="i-heroicons-beaker" />
+                      <i class="fas fa-flask"></i>
                       <span>{{ formatRainfall(city.nextSevenDays.totalRainfall) }}</span>
                     </div>
                   </div>
@@ -168,7 +172,7 @@
                   
                   <!-- Rain streak indicator -->
                   <div v-if="getLongestRainStreak(city.nextSevenDays.daily)" class="text-sm text-blue-300">
-                    <UIcon name="i-heroicons-fire" class="inline-block w-4 h-4 mr-1" />
+                    <i class="fas fa-fire w-4 h-4 mr-1"></i>
                     {{ getLongestRainStreak(city.nextSevenDays.daily) }} consecutive rainy days
                   </div>
                 </div>
@@ -191,10 +195,10 @@
                 <div>
                   <h3 class="text-2xl font-bold mb-1">{{ city.city }}, {{ city.state }}</h3>
                   <div class="flex items-center gap-2 text-blue-200">
-                    <UIcon name="i-heroicons-temperature" class="w-5 h-5" />
+                    <i class="fas fa-temperature-half w-5 h-5"></i>
                     <span>{{ formatTemp(city.currentTemp) }}</span>
                     <span class="text-white/30">|</span>
-                    <UIcon name="i-heroicons-cloud" class="w-5 h-5" />
+                    <i class="fas fa-cloud w-5 h-5"></i>
                     <span>{{ city.currentHumidity }}{{ city.units.humidity }}</span>
                   </div>
                 </div>
@@ -240,11 +244,11 @@
                 
                 <div class="flex justify-between items-center">
                   <div class="flex items-center gap-2">
-                    <UIcon name="i-heroicons-cloud-rain" class="w-5 h-5 text-blue-400" />
+                    <i class="fas fa-cloud-rain w-5 h-5 text-blue-400"></i>
                     <span class="text-sm text-blue-200">{{ city.nextSevenDays.rainyDays }} rainy days</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <UIcon name="i-heroicons-beaker" class="w-5 h-5 text-blue-400" />
+                    <i class="fas fa-flask w-5 h-5 text-blue-400"></i>
                     <span class="text-sm text-blue-200">{{ formatRainfall(city.nextSevenDays.totalRainfall) }}</span>
                   </div>
                 </div>
@@ -258,6 +262,40 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: 'RainHaven - Find Perfect Rainy Weather',
+  description: 'Discover cities with perfect rainy weather conditions for your next peaceful getaway. RainHaven helps you find locations with ideal rainfall for photography, relaxation, and cozy experiences.',
+  ogTitle: 'RainHaven - Find Perfect Rainy Weather',
+  ogDescription: 'Discover cities with perfect rainy weather conditions for your next peaceful getaway.',
+  ogImage: 'http://localhost:3001/rainhaven_og_image.png',
+  ogUrl: 'http://localhost:3001',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'RainHaven - Find Perfect Rainy Weather',
+  twitterDescription: 'Discover cities with perfect rainy weather conditions for your next peaceful getaway.',
+  twitterImage: 'http://localhost:3001/rainhaven_og_image.png',
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    { rel: 'icon', type: 'image/png', href: '/favicon-96x96.png', sizes: '96x96' },
+    { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+    { rel: 'shortcut icon', href: '/favicon.ico' },
+    { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+    { rel: 'manifest', href: '/site.webmanifest' },
+    {
+      rel: 'stylesheet',
+      href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+    }
+  ],
+  meta: [
+    { name: 'theme-color', content: '#1e3a8a' }
+  ]
+})
+
 const { data, pending, error } = await useFetch('/api/weather')
 const useMetric = ref(true)
 
@@ -303,12 +341,12 @@ const stats = computed(() => [
 
 // Helper functions
 function getRQIColor(rqi) {
-  if (rqi >= 90) return 'emerald'     // Exceptional rain conditions
-  if (rqi >= 75) return 'teal'        // Excellent rain conditions
-  if (rqi >= 60) return 'cyan'        // Good rain conditions
-  if (rqi >= 45) return 'blue'        // Moderate rain conditions
-  if (rqi >= 30) return 'indigo'      // Below average conditions
-  return 'slate'                      // Poor conditions
+  if (rqi >= 90) return 'green'     // Instead of emerald
+  if (rqi >= 75) return 'sky'       // Instead of teal
+  if (rqi >= 60) return 'blue'      // Instead of cyan
+  if (rqi >= 45) return 'indigo'    // Keep indigo
+  if (rqi >= 30) return 'purple'    // Instead of indigo
+  return 'gray'                     // Instead of slate
 }
 
 function getNextRainDay(daily) {
@@ -358,12 +396,12 @@ function getMaxRainfall(daily) {
 
 // Add RQI legend data
 const rqiLegend = [
-  { score: '90+', label: 'Perfect Rain', color: 'emerald' },
-  { score: '75-89', label: 'Excellent', color: 'teal' },
-  { score: '60-74', label: 'Good', color: 'cyan' },
-  { score: '45-59', label: 'Moderate', color: 'blue' },
-  { score: '30-44', label: 'Fair', color: 'indigo' },
-  { score: '0-29', label: 'Poor', color: 'slate' },
+  { score: '90+', label: 'Perfect Rain', color: 'green' },
+  { score: '75-89', label: 'Excellent', color: 'sky' },
+  { score: '60-74', label: 'Good', color: 'blue' },
+  { score: '45-59', label: 'Moderate', color: 'indigo' },
+  { score: '30-44', label: 'Fair', color: 'purple' },
+  { score: '0-29', label: 'Poor', color: 'gray' },
 ]
 </script>
 
