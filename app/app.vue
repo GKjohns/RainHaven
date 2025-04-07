@@ -297,7 +297,7 @@ useHead({
 })
 
 const { data, pending, error } = await useFetch('/api/weather')
-const useMetric = ref(true)
+const useMetric = ref(false)
 
 // Conversion helpers
 function convertTemp(celsius) {

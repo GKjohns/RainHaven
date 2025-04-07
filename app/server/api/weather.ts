@@ -67,13 +67,30 @@ const calculateRQI = (dailyData: any) => {
 
 const fetchWeatherData = async (city: string, state: string, lat: number, lon: number) => {
     try {
+        // Format date as YYYY-MM-DD
+        const formatDate = (date: Date) => {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+        }
+        
+        // Calculate tomorrow and 7 days from tomorrow
+        const today = new Date()
+        const tomorrow = new Date(today)
+        tomorrow.setDate(today.getDate() + 1) // Start from tomorrow
+        
+        const sevenDaysLater = new Date(tomorrow)
+        sevenDaysLater.setDate(tomorrow.getDate() + 6) // 7 days total including tomorrow
+        
         const url = new URL('https://api.open-meteo.com/v1/forecast')
         url.searchParams.set('latitude', lat.toString())
         url.searchParams.set('longitude', lon.toString())
         url.searchParams.set('hourly', 'temperature_2m,relative_humidity_2m,precipitation,windspeed_10m,weathercode')
         url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode')
         url.searchParams.set('timezone', 'auto')
-        url.searchParams.set('forecast_days', '7')
+        url.searchParams.set('start_date', formatDate(tomorrow))
+        url.searchParams.set('end_date', formatDate(sevenDaysLater))
+        
+        // Remove forecast_days as we're using explicit date range
+        // url.searchParams.set('forecast_days', '7')
 
         const response = await fetch(url)
         const data = await response.json()
